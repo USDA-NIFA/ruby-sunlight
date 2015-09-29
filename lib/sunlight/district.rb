@@ -43,7 +43,7 @@ module Sunlight
     #
     def self.get_from_lat_long(latitude, longitude)
 
-      url = construct_url("districts.getDistrictFromLatLong", {:latitude => latitude, :longitude => longitude})
+      url = construct_url("districts/locate", {:latitude => latitude, :longitude => longitude})
 
       districts = districts_from_url(url)
 
@@ -58,7 +58,7 @@ module Sunlight
     #
     def self.all_from_zipcode(zipcode)
 
-      url = construct_url("districts.getDistrictsFromZip", {:zip => zipcode})
+      url = construct_url("districts/locate", {:zip => zipcode})
 
       districts_from_url(url)
     end
@@ -68,8 +68,9 @@ module Sunlight
       if (result = get_json_data(url))
 
         districts = []
-        result["response"]["districts"].each do |district|
-          districts << District.new(district["district"]["state"], district["district"]["number"])
+        result["results"].each do |result|
+          puts result
+          districts << District.new(result["state"], result["district"])
         end
 
         districts
